@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static com.example.account.type.AccountStatus.*;
 import static com.example.account.type.ErrorCode.*;
@@ -70,6 +72,7 @@ public class AccountService {
         if(id < 0){
             throw new RuntimeException("Minus");
         }
+
         return accountRepository.findById(id).get();
     }
 
@@ -103,6 +106,18 @@ public class AccountService {
         if(account.getBalance() > 0) {
             throw new AccountException(BALANCE_NOT_EMPTY);
         }
+    }
+
+    @Transactional
+    public List<AccountDto> getAccountsByUserId(Long userId) {
+        AccountUser accountUser = accountUserRepository.findById(userId)
+                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
+
+        List<Account> accounts = accountRepository.findByAccountUser(accountUser);
+
+        return accounts.stream()
+                .map(AccountDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
 
