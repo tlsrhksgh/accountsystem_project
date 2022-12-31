@@ -55,7 +55,14 @@ public class AccountService {
         String accountNumber = "";
 
         for (int i = 0; i < 10; i++) {
-            accountNumber += random.nextInt(9);
+            int randomNum = random.nextInt(9);
+
+            // 계좌번호 첫 자리 숫자가 0일 경우 재생성
+            if(i == 0 && randomNum == 0) {
+                continue;
+            }
+
+            accountNumber += randomNum;
         }
 
         return accountNumber;
