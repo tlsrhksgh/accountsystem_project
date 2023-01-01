@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.account.type.AccountStatus.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -119,6 +120,5 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$[3].accountNumber").value("1234567893"))
                 .andExpect(jsonPath("$[3].balance").value(4000));
     }
-
 
 }

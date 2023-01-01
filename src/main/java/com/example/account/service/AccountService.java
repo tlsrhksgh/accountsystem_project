@@ -59,6 +59,7 @@ public class AccountService {
 
             // 계좌번호 첫 자리 숫자가 0일 경우 재생성
             if(i == 0 && randomNum == 0) {
+                --i;
                 continue;
             }
 

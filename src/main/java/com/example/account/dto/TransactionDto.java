@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class TransactionDto {
     private String accountNumber;
     private TransactionType transactionType;
-    private TransactionResultType transactionResultType;
+    private TransactionResultType transactionResult;
     private Long amount;
     private Long balanceSnapshot;
     private String transactionId;
@@ -25,7 +25,7 @@ public class TransactionDto {
         return TransactionDto.builder()
                 .accountNumber(transaction.getAccount().getAccountNumber())
                 .transactionType(transaction.getTransactionType())
-                .transactionResultType(transaction.getTransactionResultType())
+                .transactionResult(transaction.getTransactionResultType())
                 .amount(transaction.getAmount())
                 .balanceSnapshot(transaction.getBalanceSnapshot())
                 .transactionId(transaction.getTransactionId())

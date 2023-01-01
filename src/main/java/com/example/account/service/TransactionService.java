@@ -85,9 +85,59 @@ public class TransactionService {
     @Transactional
     public void saveFailedTransaction(String accountNumber, Long amount) {
         Account account = accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
+                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
 
-        saveAndGetTransaction(USE, FAIL, account, amount);
+        saveAndGetTransaction(CANCEL, FAIL, account, amount);
+    }
+
+    @Transactional
+    public TransactionDto cancelBalance(
+            String transactionId,
+            String accountNumber,
+            Long amount
+    ) {
+        Transaction transaction = transactionRepository.findByTransactionId(transactionId)
+                .orElseThrow(() -> new AccountException(TRANSACTION_NOT_FOUND));
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
+
+
+        validateCancelBalance(transaction, account, amount);
+
+        account.cancelBalance(amount);
+
+        return TransactionDto.fromEntity(
+                saveAndGetTransaction(CANCEL, SUCCESS, account, amount)
+        );
+    }
+
+    private void validateCancelBalance(Transaction transaction, Account account, Long amount) {
+        if(!Objects.equals(transaction.getAccount().getId(), account.getId())) {
+            throw new AccountException(TRANSACTION_ACCOUNT_UN_MATCH);
+        }
+
+        if(!Objects.equals(transaction.getAmount(), amount)) {
+            throw new AccountException(CANCEL_MUST_FULLY);
+        }
+
+        if(transaction.getTransactedAt().isBefore(LocalDateTime.now().minusYears(1))) {
+            throw new AccountException(TOO_OLD_ORDER_TO_CANCEL);
+        }
+    }
+
+    @Transactional
+    public void saveFailedCancelTransaction(String accountNumber, Long amount) {
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
+
+        saveAndGetTransaction(CANCEL, FAIL, account, amount);
+    }
+
+    public TransactionDto queryTransaction(String transactionId) {
+        return TransactionDto.fromEntity(
+                transactionRepository.findByTransactionId(transactionId)
+                        .orElseThrow(() -> new AccountException(TRANSACTION_NOT_FOUND))
+        );
     }
 
 }
