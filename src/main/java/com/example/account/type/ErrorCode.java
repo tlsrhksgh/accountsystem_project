@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public enum ErrorCode {
     INTERNAL_SERVER_ERROR("내부 서버 오류가 발생했습니다."),
+    DUPLICATED_ACCOUNTNUMBER("이미 사용하고 있는 계좌 번호 입니다."),
     USER_NOT_FOUND("사용자가 없습니다."),
     INVALID_REQUEST("잘못된 요청입니다."),
     ACCOUNT_NOT_FOUND("계좌가 없습니다."),

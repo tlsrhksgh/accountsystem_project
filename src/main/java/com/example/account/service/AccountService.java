@@ -39,6 +39,8 @@ public class AccountService {
                 .map(account -> (Long.parseLong(account.getAccountNumber())) + 1 + "")
                 .orElse(createAccountNumber());
 
+        validateDuplicatedAccountNumber(newAccountNumber);
+
         return AccountDto.fromEntity(
             accountRepository.save(Account.builder()
                     .accountUser(accountUser)
@@ -48,6 +50,12 @@ public class AccountService {
                     .registeredAt(LocalDateTime.now())
                     .build())
         );
+    }
+
+    private void validateDuplicatedAccountNumber(String newAccountNumber) {
+        if(accountRepository.findByAccountNumber(newAccountNumber).isPresent()) {
+            throw new AccountException(DUPLICATED_ACCOUNTNUMBER);
+        }
     }
 
     private String createAccountNumber() {

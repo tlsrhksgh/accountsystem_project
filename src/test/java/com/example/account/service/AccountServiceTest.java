@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static com.example.account.type.AccountStatus.*;
 import static com.example.account.type.ErrorCode.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -197,7 +198,7 @@ class AccountServiceTest {
         given(accountRepository.findByAccountNumber(anyString()))
                 .willReturn(Optional.of(Account.builder()
                         .accountUser(kim)
-                        .accountStatus(AccountStatus.UNREGISTERED)
+                        .accountStatus(UNREGISTERED)
                         .balance(0L)
                         .accountNumber("1234567890")
                         .build()));
@@ -210,5 +211,28 @@ class AccountServiceTest {
         assertEquals(ACCOUNT_ALREADY_UNREGISTERED, exception.getErrorCode());
     }
 
+//    @Test
+//    @DisplayName("사용되고 있는 계좌번호가 있음 - 계좌 생성 실패")
+//    void createAccountFailed_alreadyUseAccountNumber() {
+//        //given
+//        AccountUser kim = AccountUser.builder()
+//                .id(1L).name("kim").build();
+//        given(accountUserRepository.findById(anyLong()))
+//                .willReturn(Optional.of(kim));
+//        given(accountRepository.findByAccountNumber(anyString()))
+//                .willReturn(Optional.of(Account.builder()
+//                        .accountUser(kim)
+//                        .accountStatus(IN_USE)
+//                        .balance(0L)
+//                        .accountNumber("1234567890")
+//                        .build()));
+//
+//        //when
+//        AccountException exception = assertThrows(AccountException.class,
+//                () -> accountService.createAccount(1L, 10000L, "1234567890"));
+//
+//        //then
+//        assertEquals(DUPLICATED_ACCOUNTNUMBER, exception.getErrorCode());
+//    }
 
 }
